@@ -6,5 +6,5 @@ using UnityEngine;
 public class RoundData : ScriptableObject
 {
     public Sprite[] spritesToFind;
-    public int[] buttonsNumber = new int[5];
+    public int[] buttonsNumber;
 }

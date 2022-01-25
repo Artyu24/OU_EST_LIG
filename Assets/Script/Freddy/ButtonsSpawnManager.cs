@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class ButtonsSpawnManager : MonoBehaviour
 {
     public List<Button> buttons = new List<Button>();
-    public Sprite imgToClick;
+    private Sprite imgToClick;
     int round = 1;
-    private RoundData roundData;
+    public RoundData roundData;
     public Button wrongButton;
     public Button rightButton;
     public Canvas canvas;
@@ -18,13 +18,16 @@ public class ButtonsSpawnManager : MonoBehaviour
         switch (round)
         {
             case 1:
-                for(int i = 0; i < 50; i++)
+                imgToClick = roundData.spritesToFind[0];
+                rightButton.image.sprite = imgToClick;
+                Debug.Log(imgToClick);
+                for (int i = 0; i < roundData.buttonsNumber[0]; i++)
                 {
                     buttons.Add(wrongButton);
                 }
                 buttons.Add(rightButton);
                 SpawnButtons();
-                round = -1;
+                round++;
                 break;
             default:
                 break;
@@ -40,19 +43,17 @@ public class ButtonsSpawnManager : MonoBehaviour
         }
     }
 
-    public void OnClick()
+    public void OnClick(Button buttonClicked)
     {
-        foreach (Button button in buttons)
+        Debug.Log(buttonClicked.image.sprite);
+        if (buttonClicked.image.sprite == imgToClick)
         {
-            if (button.image.sprite == imgToClick)
-            {
-                Debug.Log("Nice one !");
-                break;
-            }
-            else
-            {
-                Debug.Log("Nul !");
-            }
+            //Add score to the player
+            Debug.Log("Found!");
+        } else
+        {
+            //Lose total score
+            Debug.Log("Wrong one!");
         }
     }
 }
