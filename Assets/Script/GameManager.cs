@@ -1,25 +1,29 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using System.Linq;
+using Mirror;
+using Mirror.Examples.Basic;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     private static Dictionary<string, DataPlayer> players = new Dictionary<string, DataPlayer>();
 
     public static GameManager instance;
 
-    private const string playerIdPrefix = "Player_";
+    public const string playerIdPrefix = "Player_";
 
     private int nbrRound = 1;
     public int maxNbrRound;
     public int timeMaxPerRound;
+    private int scoreToTakeOff;
 
-    [SerializeField] private float timeInGame;
-    public float GetTimeInGame { get { return timeInGame; } }
-
-    private bool isCoroutineOn = false;
+    private float timeInGame;
+    //public float GetTimeInGame { get { return timeInGame; } }
+    [SyncVar]
+    private bool isCoroutineOn = true;
 
 
     private void Awake()
@@ -31,22 +35,39 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        timeInGame = timeMaxPerRound;
+        scoreToTakeOff = (ScoreManager.instance.GetMaxScore * 3 / 4) / (timeMaxPerRound * 2);
+    }
+
     private void Update()
     {
-        if (!isCoroutineOn)
-            TimerActif();
+        if (!isCoroutineOn && TimerActif() != null)
+            StartCoroutine(TimerActif());
 
-        if (nbrRound > maxNbrRound)
+        if (nbrRound <= maxNbrRound)
         {
             if (timeInGame <= 0)
             {
                 nbrRound++;
                 timeInGame = timeMaxPerRound;
+                ScoreManager.instance.ResetScore();
+                Debug.Log("round suivant");
             }
         }
         else
         {
             //Fin de partie
+        }
+
+        //PUR DEBUG
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            foreach (DataPlayer player in GetAllPlayers())
+            {
+                Debug.Log(player.name + " : " + player.GetActualScore);
+            }
         }
     }
 
@@ -72,11 +93,26 @@ public class GameManager : MonoBehaviour
         return players.Values.ToArray();
     }
 
+    [Server]
     private IEnumerator TimerActif()
     {
         isCoroutineOn = true;
         yield return new WaitForSeconds(.5f);
+        DecreaseTime();
+        ScoreManager.instance.ScoreDecrease(scoreToTakeOff);
+        isCoroutineOn = false;
+    }
+
+    [ClientRpc]
+    private void DecreaseTime()
+    {
         timeInGame -= .5f;
+    }
+
+
+    public void TEST()
+    {
+        Debug.Log("JE LANCE LE JEU");
         isCoroutineOn = false;
     }
 

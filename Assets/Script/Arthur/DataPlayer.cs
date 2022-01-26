@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,14 +6,20 @@ using Mirror;
 
 public class DataPlayer : NetworkBehaviour
 {
-    private int actualScore = 0;
+    [SyncVar]
+    private int actualScore;
+
+    public int GetActualScore {get {return actualScore;} }
+
+    private void Awake()
+    {
+        actualScore = 0;
+    }
 
     public void AddScore(int addPoint)
     {
-        if (isLocalPlayer)
-        {
-            actualScore += addPoint;
-            //Afficher le score sur UI
-        }
+        actualScore += addPoint;
+        Debug.Log(actualScore);
+        //Afficher le score sur UI
     }
 }
