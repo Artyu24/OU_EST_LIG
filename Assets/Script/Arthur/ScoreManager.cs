@@ -51,6 +51,22 @@ public class ScoreManager : NetworkBehaviour
     }
 
 
+
+    [Client]
+    public void DecreaseScorePlayer()
+    {
+        GameObject localPlayer = NetworkClient.localPlayer.gameObject;
+
+        CmdDecreaseScorePlayer(GameManager.GetPlayer(localPlayer.name));
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdDecreaseScorePlayer(DataPlayer player)
+    {
+        player.DecreaseScore();
+    }
+
+
     public void ResetScore()
     {
         actualScore = maxScore;

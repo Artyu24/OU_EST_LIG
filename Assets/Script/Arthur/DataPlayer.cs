@@ -22,4 +22,11 @@ public class DataPlayer : NetworkBehaviour
         Debug.Log(actualScore);
         //Afficher le score sur UI
     }
+
+    public void DecreaseScore()
+    {
+        actualScore -= 100;
+        Debug.Log(actualScore);
+        //Afficher le score sur UI
+    }
 }
