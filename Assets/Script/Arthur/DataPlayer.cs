@@ -6,6 +6,8 @@ using Mirror;
 
 public class DataPlayer : NetworkBehaviour
 {
+    [SyncVar] public string username = "Player";
+
     [SyncVar]
     private int actualScore;
 
@@ -19,14 +21,10 @@ public class DataPlayer : NetworkBehaviour
     public void AddScore(int addPoint)
     {
         actualScore += addPoint;
-        Debug.Log(actualScore);
-        //Afficher le score sur UI
     }
 
     public void DecreaseScore()
     {
         actualScore -= 100;
-        Debug.Log(actualScore);
-        //Afficher le score sur UI
     }
 }

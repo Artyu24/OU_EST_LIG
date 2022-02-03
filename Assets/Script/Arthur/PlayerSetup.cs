@@ -8,6 +8,11 @@ public class PlayerSetup : NetworkBehaviour
     [SerializeField] 
     private Behaviour[] componentsToDisable;
 
+    [SerializeField] 
+    private GameObject playerUIPrefeb;
+    private GameObject playerUIInstance;
+    public GameObject GetPlayerUIInstance { get { return playerUIInstance; } }
+
     private void Start()
     {
         if (!isLocalPlayer)
@@ -16,6 +21,27 @@ public class PlayerSetup : NetworkBehaviour
             {
                 componentsToDisable[i].enabled = false;
             }
+        }
+        else
+        {
+            // Création UI joueur local
+            playerUIInstance = Instantiate(playerUIPrefeb);
+
+            // Config UI
+            PlayerUI ui = playerUIInstance.GetComponent<PlayerUI>();
+            ui.SetDataPlayer(GetComponent<DataPlayer>());
+
+            CmdSetUsername(transform.name, UserAccountManager.LoggedInUsername);
+        }
+    }
+
+    [Command]
+    private void CmdSetUsername(string playerID, string username)
+    {
+        DataPlayer player = GameManager.GetPlayer(playerID);
+        if (player != null)
+        {
+            player.username = username;
         }
     }
 
@@ -46,6 +72,8 @@ public class PlayerSetup : NetworkBehaviour
 
     private void OnDisable()
     {
+        Destroy(playerUIInstance);
+
         GameManager.UnregisterPlayer(transform.name);
     }
 }
