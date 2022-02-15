@@ -52,14 +52,18 @@ public class GameManager : NetworkBehaviour
                 if (player.username == "Admin")
                 {
                     isAdminHere = true;
-                    StartGame();
+                    if(StartGame() != null)
+                        StartCoroutine(StartGame());
                     return;
                 }
             }
         }
 
         if (!isCoroutineOn && TimerActif() != null)
+        {
+            isCoroutineOn = true;
             StartCoroutine(TimerActif());
+        }
 
         if (nbrRound <= maxNbrRound)
         {
@@ -113,7 +117,7 @@ public class GameManager : NetworkBehaviour
     [Server]
     private IEnumerator TimerActif()
     {
-        isCoroutineOn = true;
+        //isCoroutineOn = true;
         yield return new WaitForSeconds(.5f);
         DecreaseTime();
         ScoreManager.instance.ScoreDecrease(scoreToTakeOff);
@@ -127,8 +131,10 @@ public class GameManager : NetworkBehaviour
     }
 
     [Server]
-    private void StartGame()
+    private IEnumerator StartGame()
     {
+        Debug.Log("La partie démarre dans 5 sec !");
+        yield return new WaitForSeconds(5f);
         Debug.Log("Le Serveur à lancer la partie");
         isCoroutineOn = false;
     }
