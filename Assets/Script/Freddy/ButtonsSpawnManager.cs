@@ -6,22 +6,26 @@ using UnityEngine.UI;
 public class ButtonsSpawnManager : MonoBehaviour
 {
     public List<Button> buttons = new List<Button>();
-    private Sprite imgToClick;
+    public static Sprite imgToClick;
     int round = 1;
     public RoundData roundData;
     public Button wrongButton;
     public Button rightButton;
     public Canvas canvas;
 
+    private void Start()
+    {
+        imgToClick = roundData.spritesToFind[0];
+        Debug.Log("Img to find : " + imgToClick);
+    }
     private void Update()
     {
         switch (round)
         {
             case 1:
-                imgToClick = roundData.spritesToFind[0];
                 rightButton.image.sprite = imgToClick;
                 Debug.Log(imgToClick);
-                for (int i = 0; i < roundData.buttonsNumber[0]; i++)
+                for (int i = 0; i < roundData.buttonsNumber[0] - 1; i++)
                 {
                     buttons.Add(wrongButton);
                 }
@@ -45,13 +49,14 @@ public class ButtonsSpawnManager : MonoBehaviour
 
     public void OnClick(Button buttonClicked)
     {
-        Debug.Log(buttonClicked.image.sprite);
+        Debug.Log("Img to find : " + imgToClick);
         if (buttonClicked.image.sprite == imgToClick)
         {
             //Add score to the player
             Debug.Log("Found!");
         } else
         {
+            Debug.Log("Img clicked : " + buttonClicked.image.sprite);
             //Lose total score
             Debug.Log("Wrong one!");
         }
