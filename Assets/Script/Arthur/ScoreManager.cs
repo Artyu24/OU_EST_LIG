@@ -71,4 +71,11 @@ public class ScoreManager : NetworkBehaviour
     {
         actualScore = maxScore;
     }
+
+
+    public string IntToString(int number)
+    {
+
+        return"";
+    }
 }

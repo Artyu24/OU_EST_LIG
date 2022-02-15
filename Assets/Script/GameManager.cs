@@ -25,6 +25,8 @@ public class GameManager : NetworkBehaviour
     [SyncVar]
     private bool isCoroutineOn = true;
 
+    private bool isAdminHere = false;
+
 
     private void Awake()
     {
@@ -43,6 +45,19 @@ public class GameManager : NetworkBehaviour
 
     private void Update()
     {
+        if (!isAdminHere)
+        {
+            foreach (DataPlayer player in GetAllPlayers())
+            {
+                if (player.username == "Admin")
+                {
+                    isAdminHere = true;
+                    StartGame();
+                    return;
+                }
+            }
+        }
+
         if (!isCoroutineOn && TimerActif() != null)
             StartCoroutine(TimerActif());
 
@@ -58,7 +73,9 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
-            //Fin de partie
+            Debug.Log("FIN DE LA PARTIE");
+            StopAllCoroutines();
+            isCoroutineOn = true;
         }
 
         //PUR DEBUG
@@ -107,6 +124,13 @@ public class GameManager : NetworkBehaviour
     private void DecreaseTime()
     {
         timeInGame -= .5f;
+    }
+
+    [Server]
+    private void StartGame()
+    {
+        Debug.Log("Le Serveur à lancer la partie");
+        isCoroutineOn = false;
     }
 
 
