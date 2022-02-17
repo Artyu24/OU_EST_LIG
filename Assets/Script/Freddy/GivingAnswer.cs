@@ -10,12 +10,12 @@ public class GivingAnswer : NetworkBehaviour
         /*Debug.Log(ButtonsSpawnManager.imgToClick);*/
         if (gameObject.GetComponent<SpriteRenderer>().sprite == ButtonsSpawnManager.instance.GetSetImgToClick)
         {
-            //Add score to the player
+            ScoreManager.instance.AddScorePlayer();
             Debug.Log("Found!");
         }
         else
         {
-            //Lose total score
+            ScoreManager.instance.DecreaseScorePlayer();
             Debug.Log("Wrong one!");
         }
         //ButtonsSpawnManager.instance.round++;
