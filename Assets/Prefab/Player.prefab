@@ -64,6 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  username: Player
 --- !u!114 &8456789754746587642
 MonoBehaviour:
   m_ObjectHideFlags: 0

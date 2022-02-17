@@ -7,14 +7,14 @@ public class GivingAnswer : NetworkBehaviour
 {
     public void OnMouseDown()
     {
-        if (gameObject.GetComponent<SpriteRenderer>().sprite == ButtonsSpawnManager.imgToClick)
+        /*Debug.Log(ButtonsSpawnManager.imgToClick);*/
+        if (gameObject.GetComponent<SpriteRenderer>().sprite == ButtonsSpawnManager.instance.GetSetImgToClick)
         {
             //Add score to the player
             Debug.Log("Found!");
         }
         else
         {
-            Debug.Log("Img clicked : " + gameObject.GetComponent<SpriteRenderer>().sprite);
             //Lose total score
             Debug.Log("Wrong one!");
         }

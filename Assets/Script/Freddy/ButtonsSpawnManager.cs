@@ -6,17 +6,20 @@ using Mirror;
 
 public class ButtonsSpawnManager : NetworkBehaviour
 {
+    [SyncVar]
+    private Sprite imgToClick;
+    public Sprite GetSetImgToClick { get { return imgToClick; } set { imgToClick = value; } }
+
     public List<GameObject> buttons = new List<GameObject>();
     private List<Vector2> buttonSpawns = new List<Vector2>();
-    public static Sprite imgToClick;
     public int round = 0;
-    float x, y;
     public RoundData roundData;
     public GameObject wrongButton;
     public GameObject rightButton;
-    //private RectTransform rtWrongButton, rtRightButton;
     private bool isInstantiate;
     public float tpX, tpY;
+    private float timer = 3f;
+    float x, y;
 
     public static ButtonsSpawnManager instance;
     private void Awake()
@@ -31,43 +34,38 @@ public class ButtonsSpawnManager : NetworkBehaviour
 
     private void Start()
     {
-        imgToClick = roundData.spritesToFind[round];
+        GetSetImgToClick = roundData.spritesToFind[round];
         Debug.Log("Img to find : " + imgToClick);
         isInstantiate = false;
     }
 
     private void Update()
     {
-        switch (round)
+        timer -= Time.deltaTime;
+        if(timer <= 0)
         {
-            case 0:
-                rightButton.GetComponent<SpriteRenderer>().sprite = imgToClick;
-
-                /*rtWrongButton.anchorMin = new Vector2(0.5f, 0.5f);
-                rtWrongButton.anchorMax = new Vector2(0.5f, 0.5f);
-                rtRightButton.anchorMin = new Vector2(0.5f, 0.5f);
-                rtRightButton.anchorMax = new Vector2(0.5f, 0.5f);
-
-                rtWrongButton.pivot = new Vector2(0.5f, 0.5f);
-                rtRightButton.pivot = new Vector2(0.5f, 0.5f);*/
-                for (int i = 0; i < roundData.buttonsNumber[round] - 1; i++)
-                {
-                    buttons.Add(wrongButton);
-                }
-                buttons.Add(rightButton);
-                SpawnButtons();
-                break;
-            default:
-                break;
+            switch (round)
+            {
+                case 0:
+                    rightButton.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
+                    for (int i = 0; i < roundData.buttonsNumber[round] - 1; i++)
+                    {
+                        buttons.Add(wrongButton);
+                    }
+                    buttons.Add(rightButton);
+                    SpawnButtons();
+                    break;
+                default:
+                    break;
+            }
         }
+        
 
         if (isInstantiate)
         {
             foreach (GameObject button in buttons)
             {
-                //Debug.Log(buttons[0].GetComponent<RectTransform>().anchoredPosition);
-                //Debug.Log(button.transform.position);
-                //button.GetComponent<Rigidbody2D>().velocity += Vector2.right * Time.deltaTime;
+                button.GetComponent<Rigidbody2D>().velocity += Vector2.right * Time.deltaTime * 0.2f;
                 if(button.transform.position.x <= -tpX)
                 {
                     button.transform.position = new Vector3(tpX, button.transform.position.y, button.transform.position.z);
@@ -88,23 +86,24 @@ public class ButtonsSpawnManager : NetworkBehaviour
         }
     }
     
+    [ServerCallback]
     private void SpawnButtons()
     {
         int compteur = 0;
         for(int i = 0; i < roundData.buttonsNumber[round]; i++)
         {
             
-            x = Random.Range(0, 1920);
-            y = Random.Range(0, 1080);
+            x = Random.Range(-8, 7);
+            y = Random.Range(-4, 4);
             /*foreach(Vector2 position in buttonSpawns)
             {
                 foreach(GameObject button in buttons)
                 {
-                    while (x <= (position.x - button.GetComponent<RectTransform>().rect.width / 2) && x >= (position.x + button.GetComponent<RectTransform>().rect.width / 2) &&
-                        y <= (position.y - button.GetComponent<RectTransform>().rect.height / 2) && y >= (position.y + button.GetComponent<RectTransform>().rect.height / 2))
+                    while (x <= (position.x - button.GetComponent<Collider2D>().bounds.size.x / 2) || x >= (position.x + button.GetComponent<Collider2D>().bounds.size.x / 2) &&
+                        y <= (position.y - button.GetComponent<Collider2D>().bounds.size.y / 2) || y >= (position.y + button.GetComponent<Collider2D>().bounds.size.y / 2))
                     {
-                        x = Random.Range(0, 1920);
-                        y = Random.Range(0, 1080);
+                        x = Random.Range(-9, 9);
+                        y = Random.Range(-5, 5);
                     }
                 }                
             }*/
@@ -114,7 +113,8 @@ public class ButtonsSpawnManager : NetworkBehaviour
 
         foreach(GameObject button in buttons)
         {
-            Instantiate(button, buttonSpawns[compteur], Quaternion.identity);
+            GameObject spawnButton = (GameObject)Instantiate(button, buttonSpawns[compteur], Quaternion.identity);
+            NetworkServer.Spawn(spawnButton);
             isInstantiate = true;
             compteur++;
         }
@@ -123,6 +123,6 @@ public class ButtonsSpawnManager : NetworkBehaviour
 
     public void NextRound()
     {
-        imgToClick = roundData.spritesToFind[round];
+        GetSetImgToClick = roundData.spritesToFind[round];
     }
 }
