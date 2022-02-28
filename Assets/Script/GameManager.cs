@@ -15,15 +15,16 @@ public class GameManager : NetworkBehaviour
 
     public const string playerIdPrefix = "Player_";
 
-    private int nbrRound = 1;
+    public int nbrRound = 0;
+
     public int maxNbrRound;
     public int timeMaxPerRound;
     private int scoreToTakeOff;
-
-    private float timeInGame;
+    public float timeInGame;
     //public float GetTimeInGame { get { return timeInGame; } }
+
     [SyncVar]
-    private bool isCoroutineOn = true;
+    private bool isCoroutineOn = false; // reset to true for Arthur
 
     private bool isAdminHere = false;
 
@@ -69,8 +70,11 @@ public class GameManager : NetworkBehaviour
         {
             if (timeInGame <= 0)
             {
+                //timeInGame = timeMaxPerRound;
+                //ButtonsSpawnManager.instance.ResetButtons();
+                ButtonsSpawnManager.instance.NewRound(nbrRound, ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound]);
+                //timeInGame = timeMaxPerRound;
                 nbrRound++;
-                timeInGame = timeMaxPerRound;
                 ScoreManager.instance.ResetScore();
                 Debug.Log("round suivant");
             }
