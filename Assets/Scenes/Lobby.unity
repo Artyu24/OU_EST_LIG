@@ -616,6 +616,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3754784073734727789, guid: 7c53c5247b1930044b4a087bc693289c, type: 3}
+      propertyPath: onlineScene
+      value: Assets/Scenes/SampleScene.unity
+      objectReference: {fileID: 0}
     - target: {fileID: 3754784073734727790, guid: 7c53c5247b1930044b4a087bc693289c, type: 3}
       propertyPath: m_RootOrder
       value: 1

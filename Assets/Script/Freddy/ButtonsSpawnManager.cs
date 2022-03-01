@@ -65,65 +65,40 @@ public class ButtonsSpawnManager : NetworkBehaviour
         }*/
     }
 
-    [Server]
-    public void NewRound(int round, Sprite newSpriteToFound)
-    {
-        GameManager.instance.timeInGame = GameManager.instance.timeMaxPerRound;
-        Debug.Log("Called : " + c);
-        GetSetImgToClick = newSpriteToFound;
-        Debug.Log(newSpriteToFound + " = " + GetSetImgToClick + " ?");
-        rightButton.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
-        for (int i = 0; i < roundData.buttonsNumber[round] - 1; i++)
-        {
-            buttons.Add(wrongButton);
-        }
-        buttons.Add(rightButton);
-        SpawnButtons();
-        c++;
-    }
-
-    [Server]
-    private void SpawnButtons()
+    [ServerCallback]
+    public void SpawnButtons()
     {
         int compteur = 0;
-        for (int i = 0; i < roundData.buttonsNumber[GameManager.instance.nbrRound]; i++)
+        for (int i = 0; i < roundData.buttonsNumber[GameManager.instance.nbrRound] - 1; i++)
         {
-
             x = Random.Range(-8, 7);
             y = Random.Range(-4, 4);
-            /*foreach (Vector2 position in buttonSpawns)
-            {
-                foreach (GameObject button in buttons)
-                {
-                    *//*while (x <= (position.x - button.GetComponent<Collider2D>().bounds.size.x / 2) || x >= (position.x + button.GetComponent<Collider2D>().bounds.size.x / 2) &&
-                        y <= (position.y - button.GetComponent<Collider2D>().bounds.size.y / 2) || y >= (position.y + button.GetComponent<Collider2D>().bounds.size.y / 2))
-                    {
-                        x = Random.Range(-9, 9);
-                        y = Random.Range(-5, 5);
-                    }*//*
-                }
-            }*/
-            Vector2 spawnButton = new Vector2(x, y);
-            buttonSpawns.Add(spawnButton);
-        }
+            Vector2 spawnButtonVector = new Vector2(x, y);
+            buttonSpawns.Add(spawnButtonVector);
 
-        foreach (GameObject button in buttons)
-        {
-            Debug.Log("Next Spawn");
-            GameObject spawnButton = (GameObject)Instantiate(button, buttonSpawns[compteur], Quaternion.identity);
-            NetworkServer.Spawn(spawnButton);
+            GameObject spawnWrongButton = (GameObject)Instantiate(wrongButton, buttonSpawns[compteur], Quaternion.identity);
+            buttons.Add(spawnWrongButton);
+            NetworkServer.Spawn(spawnWrongButton);
             //isInstantiate = true;
             compteur++;
         }
+        x = Random.Range(-8, 7);
+        y = Random.Range(-4, 4);
+        Vector2 spawnRightButtonVector = new Vector2(x, y);
+        buttonSpawns.Add(spawnRightButtonVector);
+        GameObject spawnRightButton = (GameObject)Instantiate(rightButton, buttonSpawns[compteur], Quaternion.identity);
+        buttons.Add(spawnRightButton);
+        NetworkServer.Spawn(spawnRightButton);
     }
 
-    [Server]
+    [ServerCallback]
     public void ResetButtons()
     {
         foreach (GameObject button in buttons)
         {
-            button.SetActive(false);
+            Destroy(button);
         }
         buttons.Clear();
+        buttonSpawns.Clear();
     }
 }

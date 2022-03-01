@@ -70,10 +70,14 @@ public class GameManager : NetworkBehaviour
         {
             if (timeInGame <= 0)
             {
-                //timeInGame = timeMaxPerRound;
-                //ButtonsSpawnManager.instance.ResetButtons();
-                ButtonsSpawnManager.instance.NewRound(nbrRound, ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound]);
-                //timeInGame = timeMaxPerRound;
+                if(ButtonsSpawnManager.instance.buttons.Count > 0)
+                {
+                    ButtonsSpawnManager.instance.ResetButtons();
+                }
+                ButtonsSpawnManager.instance.GetSetImgToClick = ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound];
+                ButtonsSpawnManager.instance.rightButton.GetComponent<SpriteRenderer>().sprite = ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound];
+                ButtonsSpawnManager.instance.SpawnButtons();
+                timeInGame = timeMaxPerRound;
                 nbrRound++;
                 ScoreManager.instance.ResetScore();
                 Debug.Log("round suivant");

@@ -748,8 +748,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  nbrRound: 0
   maxNbrRound: 2
   timeMaxPerRound: 10
+  timeInGame: 0
 --- !u!4 &1266783113
 Transform:
   m_ObjectHideFlags: 0
