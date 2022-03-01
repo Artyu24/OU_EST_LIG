@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: RoundData
   m_EditorClassIdentifier: 
   spritesToFind:
-  - {fileID: 21300000, guid: a5948784ef03fa4448ccac179fe69c24, type: 3}
-  - {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 21300000, guid: a5948784ef03fa4448ccac179fe69c24, type: 3}
-  - {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 21300000, guid: a5948784ef03fa4448ccac179fe69c24, type: 3}
+  - {fileID: 21300000, guid: 1866def280fbb604f9f34142bc46af20, type: 3}
+  - {fileID: 21300000, guid: fa821b6b08cc5ef4ca16f3382e3e3cbe, type: 3}
+  - {fileID: 21300000, guid: e06850ae44791c745b29c36aa245c475, type: 3}
+  - {fileID: 21300000, guid: 7bf3a9a04d26a074cbe7a0156b2a75ed, type: 3}
+  - {fileID: 21300000, guid: 27498d43a5ec4f044b6d99d8998ebfca, type: 3}
+  - {fileID: 21300000, guid: 0f80745c5c0157c4ab095bb9f2623755, type: 3}
   buttonsNumber: 1400000032000000280000000a00000008000000
