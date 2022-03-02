@@ -8,9 +8,4 @@ public class ShowRightImgOnUi : MonoBehaviour
     {
         gameObject.SetActive(false);    
     }
-
-    private void Update()
-    {
-        
-    }
 }

@@ -12,8 +12,12 @@ public class ButtonsSpawnManager : NetworkBehaviour
     public GameObject wrongButton;
     public GameObject rightButton;
     private bool isInstantiate;
-    public float tpX, tpY;
-    float x, y;
+    public float limitX, limitY;
+    public float speed;
+    private float x, y;
+
+    private int randMod, randDir, randSpeed;
+    public static bool buttonsMoving;
 
     public static ButtonsSpawnManager instance;
     private void Awake()
@@ -29,33 +33,53 @@ public class ButtonsSpawnManager : NetworkBehaviour
     private void Start()
     {
         isInstantiate = false;
+        buttonsMoving = false;
+        randMod = Random.Range(0, 3);
     }
 
     private void Update()
     { 
-        /*if (isInstantiate)
+        if(buttons.Count != 0)
         {
-            foreach (GameObject button in buttons)
+            randMod = 0;
+            switch (randMod)
             {
-                button.GetComponent<Rigidbody2D>().velocity += Vector2.right * Time.deltaTime * 0.2f;
-                if(button.transform.position.x <= -tpX)
-                {
-                    button.transform.position = new Vector3(tpX, button.transform.position.y, button.transform.position.z);
-                } 
-                if(button.transform.position.x >= tpX)
-                {
-                    button.transform.position = new Vector3(-tpX, button.transform.position.y, button.transform.position.z);
-                }
-                if (button.transform.position.y <= -tpY)
-                {                    
-                    button.transform.position = new Vector3(button.transform.position.x, tpY, button.transform.position.z);
-                }
-                if (button.transform.position.y >= tpY)
-                {
-                    button.transform.position = new Vector3(button.transform.position.x, -tpY, button.transform.position.z);
-                }
+                // Direction
+                case 0:
+                    if (!buttonsMoving)
+                    {
+                        randDir = Random.Range(0, 4);
+                        buttonsMoving = true;
+                    }
+                    foreach(GameObject button in buttons)
+                    {
+                        switch (randDir)
+                        {
+                            case 0: button.transform.position += Vector3.right * Time.deltaTime * speed;
+                                if(button.transform.position.x >= limitX) { button.transform.position = new Vector3(-limitX, button.transform.position.y, button.transform.position.z); }
+                                break; // Right
+                            case 1: button.transform.position += Vector3.left * Time.deltaTime * speed;
+                                if(button.transform.position.x <= -limitX) { button.transform.position = new Vector3(limitX, button.transform.position.y, button.transform.position.z); }
+                                break;  // Left
+                            case 2: button.transform.position += Vector3.up * Time.deltaTime * speed; 
+                                if(button.transform.position.y >= limitY) { button.transform.position = new Vector3(button.transform.position.x, -limitY, button.transform.position.z); }
+                                break;    // Up
+                            case 3: button.transform.position += Vector3.down * Time.deltaTime * speed;
+                                if (button.transform.position.y <= -limitY) { button.transform.position = new Vector3(button.transform.position.x, limitY, button.transform.position.z); }
+                                break;  // Down
+                            default: break;
+                        }
+                    }
+                    break;
+                // Speed
+                case 1: 
+                    break;
+                // Both
+                case 2: 
+                    break;
+                default: break;
             }
-        }*/
+        }
     }
 
     [ServerCallback]

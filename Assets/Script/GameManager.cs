@@ -78,11 +78,11 @@ public class GameManager : NetworkBehaviour
         {
             if (timeInGame <= 0)
             {
-                imgToFindUI.SetActive(true);
                 if(ButtonsSpawnManager.instance.buttons.Count > 0)
                 {
                     ButtonsSpawnManager.instance.ResetButtons();
                 }
+                imgToFindUI.SetActive(true);
                 GetSetImgToClick = ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound];
                 Debug.Log("Img to find : " + GetSetImgToClick);
                 imgToFindUI.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
@@ -93,6 +93,7 @@ public class GameManager : NetworkBehaviour
                 timeInGame = timeMaxPerRound;
                 nbrRound++;
                 ScoreManager.instance.ResetScore();
+                ButtonsSpawnManager.buttonsMoving = false;
                 Debug.Log("round suivant");
             }
         }
