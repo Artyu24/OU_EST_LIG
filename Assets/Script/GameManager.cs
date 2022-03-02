@@ -12,6 +12,7 @@ public class GameManager : NetworkBehaviour
     private static Dictionary<string, DataPlayer> players = new Dictionary<string, DataPlayer>();
 
     public static GameManager instance;
+    public GameObject imgToFindUI;
 
     public const string playerIdPrefix = "Player_";
 
@@ -22,6 +23,9 @@ public class GameManager : NetworkBehaviour
     private int scoreToTakeOff;
     public float timeInGame;
     //public float GetTimeInGame { get { return timeInGame; } }
+
+    private Sprite imgToClick;
+    public Sprite GetSetImgToClick { get { return imgToClick; } set { imgToClick = value; } }
 
     [SyncVar]
     private bool isCoroutineOn = false; // reset to true for Arthur
@@ -40,6 +44,10 @@ public class GameManager : NetworkBehaviour
 
     private void Start()
     {
+        GetSetImgToClick = ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound];
+        ButtonsSpawnManager.instance.rightButton.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
+        imgToFindUI.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
+
         timeInGame = timeMaxPerRound;
         scoreToTakeOff = (ScoreManager.instance.GetMaxScore * 3 / 4) / (timeMaxPerRound * 2);
     }
@@ -70,12 +78,17 @@ public class GameManager : NetworkBehaviour
         {
             if (timeInGame <= 0)
             {
+                imgToFindUI.SetActive(true);
                 if(ButtonsSpawnManager.instance.buttons.Count > 0)
                 {
                     ButtonsSpawnManager.instance.ResetButtons();
                 }
-                ButtonsSpawnManager.instance.GetSetImgToClick = ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound];
-                ButtonsSpawnManager.instance.rightButton.GetComponent<SpriteRenderer>().sprite = ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound];
+                GetSetImgToClick = ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound];
+                Debug.Log("Img to find : " + GetSetImgToClick);
+                imgToFindUI.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
+
+                ButtonsSpawnManager.instance.rightButton.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
+
                 ButtonsSpawnManager.instance.SpawnButtons();
                 timeInGame = timeMaxPerRound;
                 nbrRound++;
@@ -122,7 +135,7 @@ public class GameManager : NetworkBehaviour
         return players.Values.ToArray();
     }
 
-    [Server]
+    [ServerCallback]
     private IEnumerator TimerActif()
     {
         //isCoroutineOn = true;

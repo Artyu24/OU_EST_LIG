@@ -5,12 +5,7 @@ using UnityEngine.UI;
 using Mirror;
 
 public class ButtonsSpawnManager : NetworkBehaviour
-{
-    int c = 0;
-    [SyncVar]
-    private Sprite imgToClick;
-    public Sprite GetSetImgToClick { get { return imgToClick; } set { imgToClick = value; } }
-
+{ 
     public List<GameObject> buttons = new List<GameObject>();
     private List<Vector2> buttonSpawns = new List<Vector2>();
     public RoundData roundData;
@@ -33,8 +28,6 @@ public class ButtonsSpawnManager : NetworkBehaviour
 
     private void Start()
     {
-        GetSetImgToClick = roundData.spritesToFind[GameManager.instance.nbrRound];
-        Debug.Log("Img to find : " + GetSetImgToClick);
         isInstantiate = false;
     }
 

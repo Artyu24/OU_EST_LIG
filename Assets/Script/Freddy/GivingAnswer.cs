@@ -8,7 +8,7 @@ public class GivingAnswer : NetworkBehaviour
     public void OnMouseDown()
     {
         /*Debug.Log(ButtonsSpawnManager.imgToClick);*/
-        if (gameObject.GetComponent<SpriteRenderer>().sprite == ButtonsSpawnManager.instance.GetSetImgToClick)
+        if (gameObject.GetComponent<SpriteRenderer>().sprite == GameManager.instance.GetSetImgToClick)
         {
             ScoreManager.instance.AddScorePlayer();
             Debug.Log("Found!");
@@ -18,7 +18,5 @@ public class GivingAnswer : NetworkBehaviour
             ScoreManager.instance.DecreaseScorePlayer();
             Debug.Log("Wrong one!");
         }
-        //ButtonsSpawnManager.instance.round++;
-        //ButtonsSpawnManager.instance.NextRound();
     }
 }
