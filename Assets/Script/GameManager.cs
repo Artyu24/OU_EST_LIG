@@ -78,7 +78,8 @@ public class GameManager : NetworkBehaviour
         {
             if (timeInGame <= 0)
             {
-                if(ButtonsSpawnManager.instance.buttons.Count > 0)
+                ButtonsSpawnManager.choosingDirection = false;
+                if (ButtonsSpawnManager.instance.buttons.Count > 0)
                 {
                     ButtonsSpawnManager.instance.ResetButtons();
                 }
@@ -93,7 +94,6 @@ public class GameManager : NetworkBehaviour
                 timeInGame = timeMaxPerRound;
                 nbrRound++;
                 ScoreManager.instance.ResetScore();
-                ButtonsSpawnManager.buttonsMoving = false;
                 Debug.Log("round suivant");
             }
         }
