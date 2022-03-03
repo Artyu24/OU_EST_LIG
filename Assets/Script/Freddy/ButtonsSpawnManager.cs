@@ -9,7 +9,7 @@ public class ButtonsSpawnManager : NetworkBehaviour
 
     private List<Vector2> buttonSpawns = new List<Vector2>();
 
-    private List<Vector3> buttonDirections = new List<Vector3>();
+    public List<Vector3> buttonDirections = new List<Vector3>();
 
     public RoundData roundData;
     public GameObject wrongButton;

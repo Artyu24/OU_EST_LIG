@@ -24,6 +24,7 @@ public class GameManager : NetworkBehaviour
     public float timeInGame;
     //public float GetTimeInGame { get { return timeInGame; } }
 
+    
     private Sprite imgToClick;
     public Sprite GetSetImgToClick { get { return imgToClick; } set { imgToClick = value; } }
 
@@ -83,13 +84,13 @@ public class GameManager : NetworkBehaviour
                 {
                     ButtonsSpawnManager.instance.ResetButtons();
                 }
+                if(ButtonsSpawnManager.instance.buttonDirections.Count > 0)
+                {
+                    ButtonsSpawnManager.instance.buttonDirections.Clear();
+                }
                 imgToFindUI.SetActive(true);
-                GetSetImgToClick = ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound];
-                Debug.Log("Img to find : " + GetSetImgToClick);
-                imgToFindUI.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
-
-                ButtonsSpawnManager.instance.rightButton.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
-
+                ChangeImgToClick();
+                Debug.Log("New img to find : " + GetSetImgToClick);
                 ButtonsSpawnManager.instance.SpawnButtons();
                 timeInGame = timeMaxPerRound;
                 nbrRound++;
@@ -112,6 +113,14 @@ public class GameManager : NetworkBehaviour
                 Debug.Log(player.name + " : " + player.GetActualScore);
             }
         }
+    }
+
+    private void ChangeImgToClick()
+    {
+        GetSetImgToClick = ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound];
+        imgToFindUI.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
+        ButtonsSpawnManager.instance.rightButton.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
+        Debug.Log("Sprite RightButton : " + ButtonsSpawnManager.instance.rightButton.GetComponent<SpriteRenderer>().sprite);
     }
 
     public static void RegisterPlayer(string netID, DataPlayer player)
