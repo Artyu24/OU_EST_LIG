@@ -16,15 +16,16 @@ public class GameManager : NetworkBehaviour
 
     public const string playerIdPrefix = "Player_";
 
+    [SyncVar]
     public int nbrRound = 0;
 
     public int maxNbrRound;
     public int timeMaxPerRound;
     private int scoreToTakeOff;
+    [SyncVar]
     public float timeInGame;
     //public float GetTimeInGame { get { return timeInGame; } }
 
-    
     private Sprite imgToClick;
     public Sprite GetSetImgToClick { get { return imgToClick; } set { imgToClick = value; } }
 
@@ -75,6 +76,12 @@ public class GameManager : NetworkBehaviour
             StartCoroutine(TimerActif());
         }
 
+        if (GameObject.FindGameObjectWithTag("RightButton"))
+        {
+            GameObject.FindGameObjectWithTag("RightButton").GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
+        }
+
+
         if (nbrRound <= maxNbrRound)
         {
             if (timeInGame <= 0)
@@ -89,11 +96,11 @@ public class GameManager : NetworkBehaviour
                     ButtonsSpawnManager.instance.buttonDirections.Clear();
                 }
                 imgToFindUI.SetActive(true);
+                ButtonsSpawnManager.instance.SpawnButtons();
                 ChangeImgToClick();
                 Debug.Log("New img to find : " + GetSetImgToClick);
-                ButtonsSpawnManager.instance.SpawnButtons();
                 timeInGame = timeMaxPerRound;
-                nbrRound++;
+                ChangerRound();
                 ScoreManager.instance.ResetScore();
                 Debug.Log("round suivant");
             }
@@ -115,12 +122,17 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    [ServerCallback]
+    private void ChangerRound()
+    {
+        nbrRound++;
+    }
+
     private void ChangeImgToClick()
     {
         GetSetImgToClick = ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound];
         imgToFindUI.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
-        ButtonsSpawnManager.instance.rightButton.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
-        Debug.Log("Sprite RightButton : " + ButtonsSpawnManager.instance.rightButton.GetComponent<SpriteRenderer>().sprite);
+        Debug.Log("Sprite GETSET : " + GetSetImgToClick);
     }
 
     public static void RegisterPlayer(string netID, DataPlayer player)
@@ -150,6 +162,7 @@ public class GameManager : NetworkBehaviour
     {
         //isCoroutineOn = true;
         yield return new WaitForSeconds(.5f);
+        timeInGame -= .5f;
         DecreaseTime();
         ScoreManager.instance.ScoreDecrease(scoreToTakeOff);
         isCoroutineOn = false;
@@ -158,7 +171,6 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     private void DecreaseTime()
     {
-        timeInGame -= .5f;
     }
 
     [Server]
