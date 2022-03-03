@@ -14,12 +14,11 @@ public class ButtonsSpawnManager : NetworkBehaviour
     public RoundData roundData;
     public GameObject wrongButton;
     public GameObject rightButton;
-    private bool isInstantiate;
     public float limitX, limitY;
     public float speed;
     private float x, y;
 
-    private int randMod, randDir, randSpeed;
+    private int randMod;
     private int k = 0;
     public static bool choosingDirection;
 
@@ -36,7 +35,6 @@ public class ButtonsSpawnManager : NetworkBehaviour
 
     private void Start()
     {
-        isInstantiate = false;
         choosingDirection = false;
         randMod = Random.Range(0, 3);
     }
@@ -49,142 +47,15 @@ public class ButtonsSpawnManager : NetworkBehaviour
             {
                 // Direction
                 case 0:
-                    if (!choosingDirection)
-                    {
-                        for(int i = 0; i < buttons.Count; i++)
-                        {
-                            Vector3 buttonDirection = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10));
-                            buttonDirections.Add(buttonDirection);
-                        }
-                        choosingDirection = true;
-                    }
-
-                    foreach (GameObject button in buttons)
-                    {
-                        button.transform.position += buttonDirections[k] * Time.deltaTime * speed;
-                        if(k >= buttonDirections.Count - 1)
-                        {
-                            k = 0;
-                        } else
-                        {
-                            k++;
-                        }
-                    }
-
-                    foreach (GameObject button in buttons)
-                    {
-                        if (button.transform.position.x >= limitX)
-                        {
-                            button.transform.position = new Vector3(-limitX, button.transform.position.y, button.transform.position.z);
-                        }
-
-                        if (button.transform.position.x <= -limitX)
-                        {
-                            button.transform.position = new Vector3(limitX, button.transform.position.y, button.transform.position.z);
-                        }
-
-                        if (button.transform.position.y >= limitY)
-                        {
-                            button.transform.position = new Vector3(button.transform.position.x, -limitY, button.transform.position.z);
-                        }
-
-                        if (button.transform.position.y <= -limitY)
-                        {
-                            button.transform.position = new Vector3(button.transform.position.x, limitY, button.transform.position.z);
-                        }
-                    }
+                    SetDirection();
                     break;
                 // Speed
                 case 1:
-                    if (!choosingDirection)
-                    {
-                        Vector3 buttonDirection = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10));
-                        buttonDirections.Add(buttonDirection);
-                        choosingDirection = true;
-                    }
-                    foreach (GameObject button in buttons)
-                    {
-                        button.transform.position += buttonDirections[k] * Time.deltaTime * Random.Range(1, 7);
-                        if (k >= buttonDirections.Count - 1)
-                        {
-                            k = 0;
-                        }
-                        else
-                        {
-                            k++;
-                        }
-                    }
-
-                    foreach (GameObject button in buttons)
-                    {
-                        if (button.transform.position.x >= limitX)
-                        {
-                            button.transform.position = new Vector3(-limitX, button.transform.position.y, button.transform.position.z);
-                        }
-
-                        if (button.transform.position.x <= -limitX)
-                        {
-                            button.transform.position = new Vector3(limitX, button.transform.position.y, button.transform.position.z);
-                        }
-
-                        if (button.transform.position.y >= limitY)
-                        {
-                            button.transform.position = new Vector3(button.transform.position.x, -limitY, button.transform.position.z);
-                        }
-
-                        if (button.transform.position.y <= -limitY)
-                        {
-                            button.transform.position = new Vector3(button.transform.position.x, limitY, button.transform.position.z);
-                        }
-                    }
+                    SetSpeed();
                     break;
                 // Both
                 case 2:
-                    if (!choosingDirection)
-                    {
-                        for (int i = 0; i < buttons.Count; i++)
-                        {
-                            Vector3 buttonDirection = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10));
-                            buttonDirections.Add(buttonDirection);
-                        }
-                        choosingDirection = true;
-                    }
-
-                    foreach (GameObject button in buttons)
-                    {
-                        button.transform.position += buttonDirections[k] * Time.deltaTime * Random.Range(1, 7);
-                        if (k >= buttonDirections.Count - 1)
-                        {
-                            k = 0;
-                        }
-                        else
-                        {
-                            k++;
-                        }
-                    }
-
-                    foreach (GameObject button in buttons)
-                    {
-                        if (button.transform.position.x >= limitX)
-                        {
-                            button.transform.position = new Vector3(-limitX, button.transform.position.y, button.transform.position.z);
-                        }
-
-                        if (button.transform.position.x <= -limitX)
-                        {
-                            button.transform.position = new Vector3(limitX, button.transform.position.y, button.transform.position.z);
-                        }
-
-                        if (button.transform.position.y >= limitY)
-                        {
-                            button.transform.position = new Vector3(button.transform.position.x, -limitY, button.transform.position.z);
-                        }
-
-                        if (button.transform.position.y <= -limitY)
-                        {
-                            button.transform.position = new Vector3(button.transform.position.x, limitY, button.transform.position.z);
-                        }
-                    }
+                    SetDirectionAndSpeed();
                     break;
                 default: break;
             }
@@ -205,7 +76,6 @@ public class ButtonsSpawnManager : NetworkBehaviour
             GameObject spawnWrongButton = (GameObject)Instantiate(wrongButton, buttonSpawns[compteur], Quaternion.identity);
             buttons.Add(spawnWrongButton);
             NetworkServer.Spawn(spawnWrongButton);
-            //isInstantiate = true;
             compteur++;
         }
         x = Random.Range(-8, 7);
@@ -226,5 +96,151 @@ public class ButtonsSpawnManager : NetworkBehaviour
         }
         buttons.Clear();
         buttonSpawns.Clear();
+    }
+
+    [ServerCallback]
+    private void SetDirection()
+    {
+        if (!choosingDirection)
+        {
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                Vector3 buttonDirection = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10));
+                buttonDirections.Add(buttonDirection);
+            }
+            choosingDirection = true;
+        }
+
+        foreach (GameObject button in buttons)
+        {
+            button.transform.position += buttonDirections[k] * Time.deltaTime * speed;
+            if (k >= buttonDirections.Count - 1)
+            {
+                k = 0;
+            }
+            else
+            {
+                k++;
+            }
+        }
+
+        foreach (GameObject button in buttons)
+        {
+            if (button.transform.position.x >= limitX)
+            {
+                button.transform.position = new Vector3(-limitX, button.transform.position.y, button.transform.position.z);
+            }
+
+            if (button.transform.position.x <= -limitX)
+            {
+                button.transform.position = new Vector3(limitX, button.transform.position.y, button.transform.position.z);
+            }
+
+            if (button.transform.position.y >= limitY)
+            {
+                button.transform.position = new Vector3(button.transform.position.x, -limitY, button.transform.position.z);
+            }
+
+            if (button.transform.position.y <= -limitY)
+            {
+                button.transform.position = new Vector3(button.transform.position.x, limitY, button.transform.position.z);
+            }
+        }
+    }
+
+    [ServerCallback]
+    private void SetSpeed()
+    {
+        if (!choosingDirection)
+        {
+            Vector3 buttonDirection = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10));
+            buttonDirections.Add(buttonDirection);
+            choosingDirection = true;
+        }
+        foreach (GameObject button in buttons)
+        {
+            button.transform.position += buttonDirections[k] * Time.deltaTime * Random.Range(1, 7);
+            if (k >= buttonDirections.Count - 1)
+            {
+                k = 0;
+            }
+            else
+            {
+                k++;
+            }
+        }
+
+        foreach (GameObject button in buttons)
+        {
+            if (button.transform.position.x >= limitX)
+            {
+                button.transform.position = new Vector3(-limitX, button.transform.position.y, button.transform.position.z);
+            }
+
+            if (button.transform.position.x <= -limitX)
+            {
+                button.transform.position = new Vector3(limitX, button.transform.position.y, button.transform.position.z);
+            }
+
+            if (button.transform.position.y >= limitY)
+            {
+                button.transform.position = new Vector3(button.transform.position.x, -limitY, button.transform.position.z);
+            }
+
+            if (button.transform.position.y <= -limitY)
+            {
+                button.transform.position = new Vector3(button.transform.position.x, limitY, button.transform.position.z);
+            }
+        }
+    }
+
+    [ServerCallback]
+    private void SetDirectionAndSpeed()
+    {
+        if (!choosingDirection)
+        {
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                Vector3 buttonDirection = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10));
+                buttonDirections.Add(buttonDirection);
+            }
+            choosingDirection = true;
+        }
+
+        foreach (GameObject button in buttons)
+        {
+            button.transform.position += buttonDirections[k] * Time.deltaTime * Random.Range(1, 7);
+            if (k >= buttonDirections.Count - 1)
+            {
+                k = 0;
+            }
+            else
+            {
+                k++;
+            }
+        }
+
+        foreach (GameObject button in buttons)
+        {
+            if (button.transform.position.x >= limitX)
+            {
+                button.transform.position = new Vector3(-limitX, button.transform.position.y, button.transform.position.z);
+            }
+
+            if (button.transform.position.x <= -limitX)
+            {
+                button.transform.position = new Vector3(limitX, button.transform.position.y, button.transform.position.z);
+            }
+
+            if (button.transform.position.y >= limitY)
+            {
+                button.transform.position = new Vector3(button.transform.position.x, -limitY, button.transform.position.z);
+            }
+
+            if (button.transform.position.y <= -limitY)
+            {
+                button.transform.position = new Vector3(button.transform.position.x, limitY, button.transform.position.z);
+            }
+        }
     }
 }
