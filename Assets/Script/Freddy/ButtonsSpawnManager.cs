@@ -129,22 +129,22 @@ public class ButtonsSpawnManager : NetworkBehaviour
         {
             if (button.transform.position.x >= limitX)
             {
-                button.transform.position = new Vector3(-limitX, button.transform.position.y, button.transform.position.z);
+                button.transform.position = new Vector3(-limitX + 0.01f, button.transform.position.y, button.transform.position.z);
             }
 
             if (button.transform.position.x <= -limitX)
             {
-                button.transform.position = new Vector3(limitX, button.transform.position.y, button.transform.position.z);
+                button.transform.position = new Vector3(limitX - 0.01f, button.transform.position.y, button.transform.position.z);
             }
 
             if (button.transform.position.y >= limitY)
             {
-                button.transform.position = new Vector3(button.transform.position.x, -limitY, button.transform.position.z);
+                button.transform.position = new Vector3(button.transform.position.x, -limitY + 0.01f, button.transform.position.z);
             }
 
             if (button.transform.position.y <= -limitY)
             {
-                button.transform.position = new Vector3(button.transform.position.x, limitY, button.transform.position.z);
+                button.transform.position = new Vector3(button.transform.position.x, limitY - 0.01f, button.transform.position.z);
             }
         }
     }
