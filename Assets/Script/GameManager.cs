@@ -19,6 +19,12 @@ public class GameManager : NetworkBehaviour
     [SyncVar]
     public int nbrRound = 0;
 
+    [SyncVar]
+    public int randSprite;
+
+    private List<int> randSpriteList = new List<int>();
+
+    private bool isSpriting = false;
     public int maxNbrRound;
     public int timeMaxPerRound;
     private int scoreToTakeOff;
@@ -79,7 +85,22 @@ public class GameManager : NetworkBehaviour
         if (GameObject.FindGameObjectWithTag("RightButton"))
         {
             GameObject.FindGameObjectWithTag("RightButton").GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
+            if(nbrRound == maxNbrRound)
+            {
+                GameObject.FindGameObjectWithTag("RightButton").transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                imgToFindUI.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            }
         }
+
+        if(isSpriting == false)
+        {
+            for (int i = 0; i < ButtonsSpawnManager.instance.buttons.Count - 1; i++)
+            {
+                ButtonsSpawnManager.instance.buttons[i].GetComponent<SpriteRenderer>().sprite = ButtonsSpawnManager.instance.roundData.spritesToFind[randSpriteList[i]];
+            }
+            isSpriting = true;
+        }
+        
 
 
         if (nbrRound <= maxNbrRound)
@@ -94,6 +115,11 @@ public class GameManager : NetworkBehaviour
                 if(ButtonsSpawnManager.instance.buttonDirections.Count > 0)
                 {
                     ButtonsSpawnManager.instance.buttonDirections.Clear();
+                    isSpriting = false;
+                }
+                if(randSpriteList.Count > 0)
+                {
+                    randSpriteList.Clear();
                 }
                 imgToFindUI.SetActive(true);
                 ButtonsSpawnManager.instance.SpawnButtons();
@@ -132,7 +158,18 @@ public class GameManager : NetworkBehaviour
     {
         GetSetImgToClick = ButtonsSpawnManager.instance.roundData.spritesToFind[nbrRound];
         imgToFindUI.GetComponent<SpriteRenderer>().sprite = GetSetImgToClick;
-        Debug.Log("Sprite GETSET : " + GetSetImgToClick);
+        Debug.Log("Sprite GETSET : " + GetSetImgToClick); 
+        for(int i = 0; i < ButtonsSpawnManager.instance.buttons.Count - 1; i++)
+        {
+            randSprite = UnityEngine.Random.Range(0, GameManager.instance.maxNbrRound + 1);
+            while (randSprite == nbrRound)
+            {
+                randSprite = UnityEngine.Random.Range(0, GameManager.instance.maxNbrRound + 1);
+            }
+            randSpriteList.Add(randSprite);
+            //ButtonsSpawnManager.instance.buttons[i].GetComponent<SpriteRenderer>().sprite = ButtonsSpawnManager.instance.roundData.spritesToFind[randSprite];
+        }      
+
     }
 
     public static void RegisterPlayer(string netID, DataPlayer player)

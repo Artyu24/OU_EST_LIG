@@ -15,6 +15,7 @@ public class ButtonsSpawnManager : NetworkBehaviour
     public GameObject wrongButton;
     public GameObject rightButton;
     public GameObject spawnRightButton;
+    public GameObject spawnWrongButton;
     public float limitX, limitY;
     public float speed;
     private float x, y;
@@ -74,11 +75,13 @@ public class ButtonsSpawnManager : NetworkBehaviour
             Vector2 spawnButtonVector = new Vector2(x, y);
             buttonSpawns.Add(spawnButtonVector);
 
-            GameObject spawnWrongButton = (GameObject)Instantiate(wrongButton, buttonSpawns[compteur], Quaternion.identity);
+            spawnWrongButton = (GameObject)Instantiate(wrongButton, buttonSpawns[compteur], Quaternion.identity);
             buttons.Add(spawnWrongButton);
-            NetworkServer.Spawn(spawnWrongButton);
+            NetworkServer.Spawn(spawnWrongButton);         
+            
             compteur++;
         }
+
         x = Random.Range(-8, 7);
         y = Random.Range(-4, 4);
         Vector2 spawnRightButtonVector = new Vector2(x, y);
