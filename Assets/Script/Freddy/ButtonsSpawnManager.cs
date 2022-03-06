@@ -163,7 +163,7 @@ public class ButtonsSpawnManager : NetworkBehaviour
         }
         foreach (GameObject button in buttons)
         {
-            button.transform.position += buttonDirections[k] * Time.deltaTime * Random.Range(1, 3);
+            button.transform.position += buttonDirections[k] * Time.deltaTime * Random.Range(0.1f, 2f);
             if (k >= buttonDirections.Count - 1)
             {
                 k = 0;
@@ -213,7 +213,7 @@ public class ButtonsSpawnManager : NetworkBehaviour
 
         foreach (GameObject button in buttons)
         {
-            button.transform.position += buttonDirections[k] * Time.deltaTime * Random.Range(1, 3);
+            button.transform.position += buttonDirections[k] * Time.deltaTime * Random.Range(0.1f, 2f);
             if (k >= buttonDirections.Count - 1)
             {
                 k = 0;
