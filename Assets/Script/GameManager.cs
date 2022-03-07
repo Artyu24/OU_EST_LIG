@@ -24,7 +24,9 @@ public class GameManager : NetworkBehaviour
     [SyncVar]
     public int nbrRound = 0;
 
+    private int previousNbrOfWrongButtons;
     public int randSprite;
+    private bool isChanging = false;
 
     private bool isSpriting = true;
     public int maxNbrRound;
@@ -94,9 +96,10 @@ public class GameManager : NetworkBehaviour
             }
         }
 
-        if (GameObject.FindGameObjectWithTag("WrongButton") && isSpriting == false)
+        if (GameObject.FindGameObjectWithTag("WrongButton") && isSpriting == false && previousNbrOfWrongButtons != GameObject.FindGameObjectsWithTag("WrongButton").Length)
         {
             wrongButtonsList.AddRange(GameObject.FindGameObjectsWithTag("WrongButton"));
+            previousNbrOfWrongButtons = wrongButtonsList.Count;
             Debug.Log("Number of WrongButtons found and added to the List : " + GameObject.FindGameObjectsWithTag("WrongButton").Length);
             ChangeSpriteWrongButton();
             isSpriting = true;
@@ -104,27 +107,9 @@ public class GameManager : NetworkBehaviour
 
         if (nbrRound <= maxNbrRound)
         {
-            if (timeInGame <= 0)
+            if (timeInGame <= 0 && isChanging == false)
             {
-                ButtonsSpawnManager.choosingDirection = false;
-                if (ButtonsSpawnManager.instance.buttons.Count > 0)
-                {
-                    ButtonsSpawnManager.instance.ResetButtons();
-                }
-                if(ButtonsSpawnManager.instance.buttonDirections.Count > 0)
-                {
-                    ButtonsSpawnManager.instance.buttonDirections.Clear();
-                }
-                imgToFindUI.SetActive(true);
-                ButtonsSpawnManager.instance.SpawnButtons();
-                isSpriting = false;
-                nbrButtonsInList = ButtonsSpawnManager.instance.buttons.Count;
-                ChangeImgToClick();
-                Debug.Log("New img to find : " + GetSetImgToClick);
-                timeInGame = timeMaxPerRound;
-                ChangerRound();
-                ScoreManager.instance.ResetScore();
-                Debug.Log("round suivant");
+                StartCoroutine(Changes());
             }
         }
         else
@@ -144,6 +129,42 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    IEnumerator Changes()
+    {
+        isChanging = true;
+        ResetRound();
+        yield return new WaitForSeconds(1.0f);
+        ButtonsManagement();
+    }
+
+    private void ResetRound()
+    {
+        ButtonsSpawnManager.choosingDirection = false;
+        if (ButtonsSpawnManager.instance.buttons.Count > 0)
+        {
+            ButtonsSpawnManager.instance.ResetButtons();
+        }
+        if (ButtonsSpawnManager.instance.buttonDirections.Count > 0)
+        {
+            ButtonsSpawnManager.instance.buttonDirections.Clear();
+        }
+        ScoreManager.instance.ResetScore();
+    }
+
+    private void ButtonsManagement()
+    {
+        imgToFindUI.SetActive(true);
+        ButtonsSpawnManager.instance.SpawnButtons();
+        isSpriting = false;
+        nbrButtonsInList = ButtonsSpawnManager.instance.buttons.Count;
+        timeInGame = timeMaxPerRound;
+        ChangeImgToClick();
+        Debug.Log("New img to find : " + GetSetImgToClick);
+        ChangerRound();
+        Debug.Log("round suivant");
+        isChanging = false;
+    }
+
     [ServerCallback]
     private void ChangerRound()
     {
@@ -157,14 +178,9 @@ public class GameManager : NetworkBehaviour
         foreach (GameObject wrongButton in wrongButtonsList)
         {
             randSprite = UnityEngine.Random.Range(0, maxNbrRound);
-            while (randSprite == nbrRound)
+            while (randSprite == nbrRound) //comparer les sprites*
             {
                 randSprite = UnityEngine.Random.Range(0, maxNbrRound);
-            }
-            // scale Logo LIG
-            if (randSprite == 5)
-            {
-                wrongButton.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
             }
             Debug.Log("Rand int for Sprites : " + randSprite);
             wrongButton.GetComponent<SpriteRenderer>().sprite = ButtonsSpawnManager.instance.roundData.spritesToFind[randSprite];
