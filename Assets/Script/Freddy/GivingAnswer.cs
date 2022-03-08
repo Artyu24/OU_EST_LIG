@@ -7,7 +7,6 @@ public class GivingAnswer : NetworkBehaviour
 {
     public void OnMouseDown()
     {
-        /*Debug.Log(ButtonsSpawnManager.imgToClick);*/
         if (gameObject.GetComponent<SpriteRenderer>().sprite == GameManager.instance.GetSetImgToClick)
         {
             ScoreManager.instance.AddScorePlayer();

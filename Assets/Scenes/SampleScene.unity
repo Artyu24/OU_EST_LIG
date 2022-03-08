@@ -543,6 +543,8 @@ MonoBehaviour:
   syncInterval: 0.1
   imgToFindUI: {fileID: 443720945}
   nbrRound: 0
+  randSprite: 0
+  timeBetweenRound: 5
   maxNbrRound: 6
   timeMaxPerRound: 10
   timeInGame: 0
