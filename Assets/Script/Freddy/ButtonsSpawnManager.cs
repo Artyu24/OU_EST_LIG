@@ -10,19 +10,25 @@ public class ButtonsSpawnManager : NetworkBehaviour
     private List<Vector2> buttonSpawns = new List<Vector2>();
 
     public List<Vector3> buttonDirections = new List<Vector3>();
+    public List<float> buttonsSpeed = new List<float>();
 
     public RoundData roundData;
     public GameObject wrongButton;
     public GameObject rightButton;
     public GameObject spawnRightButton;
     public GameObject spawnWrongButton;
+    private GameObject spawnTpButton;
+    private Vector3 newPosSpawnTpButton;
     public float limitX, limitY;
     public float speed;
     private float x, y;
 
-    private int randMod;
+    public bool inContact = false;
+
+    public static int randMod;
     private int k = 0;
     public static bool choosingDirection;
+    public static bool choosingSpeed = true;
 
     public static ButtonsSpawnManager instance;
     private void Awake()
@@ -40,11 +46,12 @@ public class ButtonsSpawnManager : NetworkBehaviour
         choosingDirection = false;
         randMod = Random.Range(0, 3);
     }
-
+    
     private void Update()
     { 
         if(buttons.Count != 0)
         {
+            Debug.Log(randMod);
             switch (randMod)
             {
                 // Direction
@@ -107,6 +114,7 @@ public class ButtonsSpawnManager : NetworkBehaviour
     {
         if (!choosingDirection)
         {
+            speed = Random.Range(2, 5);
             for (int i = 0; i < buttons.Count; i++)
             {
                 Vector3 buttonDirection = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10));
@@ -117,7 +125,12 @@ public class ButtonsSpawnManager : NetworkBehaviour
 
         foreach (GameObject button in buttons)
         {
-            button.transform.position += buttonDirections[k] * Time.deltaTime * speed;
+            if (inContact == false) 
+            {
+                button.GetComponent<GivingAnswer>().direction = buttonDirections[k].normalized;
+                button.transform.position += buttonDirections[k].normalized * Time.deltaTime * speed;                
+            }
+
             if (k >= buttonDirections.Count - 1)
             {
                 k = 0;
@@ -125,29 +138,6 @@ public class ButtonsSpawnManager : NetworkBehaviour
             else
             {
                 k++;
-            }
-        }
-
-        foreach (GameObject button in buttons)
-        {
-            if (button.transform.position.x >= limitX)
-            {
-                button.transform.position = new Vector3(-limitX + 0.01f, button.transform.position.y, button.transform.position.z);
-            }
-
-            if (button.transform.position.x <= -limitX)
-            {
-                button.transform.position = new Vector3(limitX - 0.01f, button.transform.position.y, button.transform.position.z);
-            }
-
-            if (button.transform.position.y >= limitY)
-            {
-                button.transform.position = new Vector3(button.transform.position.x, -limitY + 0.01f, button.transform.position.z);
-            }
-
-            if (button.transform.position.y <= -limitY)
-            {
-                button.transform.position = new Vector3(button.transform.position.x, limitY - 0.01f, button.transform.position.z);
             }
         }
     }
@@ -155,15 +145,33 @@ public class ButtonsSpawnManager : NetworkBehaviour
     [ServerCallback]
     private void SetSpeed()
     {
+        if (choosingSpeed)
+        {
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                speed = Random.Range(2f, 5f);
+                buttonsSpeed.Add(speed);
+            }
+            choosingSpeed = false;
+        }
+
         if (!choosingDirection)
         {
             Vector3 buttonDirection = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10));
-            buttonDirections.Add(buttonDirection);
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                buttonDirections.Add(buttonDirection);
+            }
             choosingDirection = true;
         }
         foreach (GameObject button in buttons)
         {
-            button.transform.position += buttonDirections[k] * Time.deltaTime * Random.Range(0.1f, 2f);
+            if (inContact == false)
+            {
+                button.GetComponent<GivingAnswer>().direction = buttonDirections[k].normalized;
+                button.transform.position += buttonDirections[k].normalized * Time.deltaTime * buttonsSpeed[k];
+
+            }
             if (k >= buttonDirections.Count - 1)
             {
                 k = 0;
@@ -172,40 +180,27 @@ public class ButtonsSpawnManager : NetworkBehaviour
             {
                 k++;
             }
-        }
-
-        foreach (GameObject button in buttons)
-        {
-            if (button.transform.position.x >= limitX)
-            {
-                button.transform.position = new Vector3(-limitX, button.transform.position.y, button.transform.position.z);
-            }
-
-            if (button.transform.position.x <= -limitX)
-            {
-                button.transform.position = new Vector3(limitX, button.transform.position.y, button.transform.position.z);
-            }
-
-            if (button.transform.position.y >= limitY)
-            {
-                button.transform.position = new Vector3(button.transform.position.x, -limitY, button.transform.position.z);
-            }
-
-            if (button.transform.position.y <= -limitY)
-            {
-                button.transform.position = new Vector3(button.transform.position.x, limitY, button.transform.position.z);
-            }
-        }
+        }        
     }
 
     [ServerCallback]
     private void SetDirectionAndSpeed()
     {
+        if (choosingSpeed)
+        {
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                speed = Random.Range(2f, 5f);
+                buttonsSpeed.Add(speed);
+            }
+            choosingSpeed = false;
+        }
+
         if (!choosingDirection)
         {
             for (int i = 0; i < buttons.Count; i++)
             {
-                Vector3 buttonDirection = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10));
+                Vector3 buttonDirection = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10));                
                 buttonDirections.Add(buttonDirection);
             }
             choosingDirection = true;
@@ -213,7 +208,11 @@ public class ButtonsSpawnManager : NetworkBehaviour
 
         foreach (GameObject button in buttons)
         {
-            button.transform.position += buttonDirections[k] * Time.deltaTime * Random.Range(0.1f, 2f);
+            if(inContact == false)
+            {
+                button.GetComponent<GivingAnswer>().direction = buttonDirections[k].normalized;
+                button.transform.position += buttonDirections[k].normalized * Time.deltaTime * buttonsSpeed[k];
+            }
             if (k >= buttonDirections.Count - 1)
             {
                 k = 0;
@@ -221,29 +220,6 @@ public class ButtonsSpawnManager : NetworkBehaviour
             else
             {
                 k++;
-            }
-        }
-
-        foreach (GameObject button in buttons)
-        {
-            if (button.transform.position.x >= limitX)
-            {
-                button.transform.position = new Vector3(-limitX, button.transform.position.y, button.transform.position.z);
-            }
-
-            if (button.transform.position.x <= -limitX)
-            {
-                button.transform.position = new Vector3(limitX, button.transform.position.y, button.transform.position.z);
-            }
-
-            if (button.transform.position.y >= limitY)
-            {
-                button.transform.position = new Vector3(button.transform.position.x, -limitY, button.transform.position.z);
-            }
-
-            if (button.transform.position.y <= -limitY)
-            {
-                button.transform.position = new Vector3(button.transform.position.x, limitY, button.transform.position.z);
             }
         }
     }

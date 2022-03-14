@@ -144,7 +144,10 @@ public class GameManager : NetworkBehaviour
 
     private void ResetRound()
     {
+        ButtonsSpawnManager.instance.inContact = false;
         ButtonsSpawnManager.choosingDirection = false;
+        ButtonsSpawnManager.randMod = UnityEngine.Random.Range(0, 3);
+        ButtonsSpawnManager.choosingSpeed = true;
         if (ButtonsSpawnManager.instance.buttons.Count > 0)
         {
             ButtonsSpawnManager.instance.ResetButtons();
@@ -158,6 +161,7 @@ public class GameManager : NetworkBehaviour
 
     private void ButtonsManagement()
     {
+        Debug.Log(ButtonsSpawnManager.instance.inContact);
         ButtonsSpawnManager.instance.SpawnButtons();
         isSpriting = false;
         nbrButtonsInList = ButtonsSpawnManager.instance.buttons.Count;
