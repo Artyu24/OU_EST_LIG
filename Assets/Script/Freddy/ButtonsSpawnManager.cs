@@ -51,23 +51,24 @@ public class ButtonsSpawnManager : NetworkBehaviour
     { 
         if(buttons.Count != 0)
         {
-            Debug.Log(randMod);
-            switch (randMod)
-            {
-                // Direction
-                case 0:
-                    SetDirection();
-                    break;
-                // Speed
-                case 1:
-                    SetSpeed();
-                    break;
-                // Both
-                case 2:
-                    SetDirectionAndSpeed();
-                    break;
-                default: break;
-            }
+            SetDirectionAndSpeed();
+            //Debug.Log(randMod);
+            //switch (randMod)
+            //{
+            //    // Direction
+            //    case 0:
+            //        SetDirection();
+            //        break;
+            //    // Speed
+            //    case 1:
+            //        SetSpeed();
+            //        break;
+            //    // Both
+            //    case 2:
+            //        SetDirectionAndSpeed();
+            //        break;
+            //    default: break;
+            //}
         }
     }
 
@@ -107,6 +108,20 @@ public class ButtonsSpawnManager : NetworkBehaviour
         }
         buttons.Clear();
         buttonSpawns.Clear();
+    }
+
+    [Client]
+    public void HideButtons()
+    {
+        GameObject[] allButton = GameObject.FindGameObjectsWithTag("WrongButton");
+        foreach (GameObject button in allButton)
+        {
+            button.GetComponent<SpriteRenderer>().enabled = false;
+            button.GetComponent<GivingAnswer>().isPointTake = true;
+        }
+        GameObject goodButton = GameObject.FindGameObjectWithTag("RightButton");
+        goodButton.GetComponent<SpriteRenderer>().enabled = false; 
+        goodButton.GetComponent<GivingAnswer>().isPointTake = true;
     }
 
     [ServerCallback]

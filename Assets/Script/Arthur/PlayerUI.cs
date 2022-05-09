@@ -11,6 +11,12 @@ public class PlayerUI : MonoBehaviour
     private DataPlayer dataPlayer;
 
     [SerializeField] private GameObject scoreBoard;
+    [SerializeField] private GameObject wrongOneBox, goodOneBox;
+    [SerializeField] private Text timerText;
+
+    public bool isGetGoodAnswer;
+
+    public float delay = 3;
 
     public void SetDataPlayer(DataPlayer _dataPlayer)
     {
@@ -19,6 +25,25 @@ public class PlayerUI : MonoBehaviour
 
     private void Update()
     {
+        if(isGetGoodAnswer)
+            goodOneBox.SetActive(true);
+        else
+            goodOneBox.SetActive(false);
+            
+
+        if (delay < 2)
+        {
+            delay += Time.deltaTime;
+            wrongOneBox.SetActive(true);
+        }
+        else
+        {
+            delay = 3;
+            wrongOneBox.SetActive(false);
+        }
+
+        timerText.text = ((int)GameManager.instance.timeInGame).ToString();
+
         UpdateScore(dataPlayer.GetActualScore);
 
         if (Input.GetKeyDown(KeyCode.Tab))

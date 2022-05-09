@@ -10,6 +10,7 @@ TagManager:
   - Down
   - Left
   - Right
+  - UIPlayer
   layers:
   - Default
   - TransparentFX

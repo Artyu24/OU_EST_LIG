@@ -35,13 +35,13 @@ public class GameManager : NetworkBehaviour
     private int scoreToTakeOff;
     [SyncVar]
     public float timeInGame;
-    //public float GetTimeInGame { get { return timeInGame; } }
+    public float GetTimeInGame { get { return timeInGame; } }
 
     private Sprite imgToClick;
     public Sprite GetSetImgToClick { get { return imgToClick; } set { imgToClick = value; } }
 
     [SyncVar]
-    private bool isCoroutineOn = false; // reset to true for Arthur
+    private bool isCoroutineOn = true; // reset to true for Arthur
 
     private bool isAdminHere = false;
 
@@ -97,12 +97,12 @@ public class GameManager : NetworkBehaviour
         {
             wrongButtonsList.AddRange(GameObject.FindGameObjectsWithTag("WrongButton"));
             previousNbrOfWrongButtons = wrongButtonsList.Count;
-            Debug.Log("Number of WrongButtons found and added to the List : " + GameObject.FindGameObjectsWithTag("WrongButton").Length);
+            //Debug.Log("Number of WrongButtons found and added to the List : " + GameObject.FindGameObjectsWithTag("WrongButton").Length);
             ChangeSpriteWrongButton();
             isSpriting = true;
         }
 
-        if (nbrRound <= maxNbrRound)
+        if (nbrRound < maxNbrRound)
         {
             if (timeInGame <= 0 && isChanging == false)
             {
@@ -136,6 +136,7 @@ public class GameManager : NetworkBehaviour
         imgToFindUI.transform.localScale = new Vector3(3, 3, 3);
         isChanging = true;
         ResetRound();
+        GameObject.FindGameObjectWithTag("UIPlayer").GetComponent<PlayerUI>().isGetGoodAnswer = false;
         yield return new WaitForSeconds(timeBetweenRound);
         imgToFindUI.transform.position = previousPosition;
         imgToFindUI.transform.localScale = new Vector3(1, 1, 1);
@@ -161,7 +162,7 @@ public class GameManager : NetworkBehaviour
 
     private void ButtonsManagement()
     {
-        Debug.Log(ButtonsSpawnManager.instance.inContact);
+        //Debug.Log(ButtonsSpawnManager.instance.inContact);
         ButtonsSpawnManager.instance.SpawnButtons();
         isSpriting = false;
         nbrButtonsInList = ButtonsSpawnManager.instance.buttons.Count;
@@ -190,7 +191,7 @@ public class GameManager : NetworkBehaviour
             {
                 randSprite = UnityEngine.Random.Range(0, maxNbrRound);
             }
-            Debug.Log("Rand int for Sprites : " + randSprite);
+            //Debug.Log("Rand int for Sprites : " + randSprite + "//// Image a avoir " + GetSetImgToClick);
             wrongButton.GetComponent<SpriteRenderer>().sprite = ButtonsSpawnManager.instance.roundData.spritesToFind[randSprite];
         }
         wrongButtonsList.Clear();
@@ -238,8 +239,7 @@ public class GameManager : NetworkBehaviour
     [Server]
     private IEnumerator StartGame()
     {
-        Debug.Log("La partie démarre dans 5 sec !");
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(0f);
         Debug.Log("Le Serveur à lancer la partie");
         isCoroutineOn = false;
     }

@@ -9,6 +9,8 @@ public class GivingAnswer : NetworkBehaviour
    
     private Vector3 newDir;
 
+    public bool isPointTake;
+
     [ServerCallback]
     private void Update()
     {
@@ -73,15 +75,22 @@ public class GivingAnswer : NetworkBehaviour
 
     public void OnMouseDown()
     {
-        if (gameObject.GetComponent<SpriteRenderer>().sprite == GameManager.instance.GetSetImgToClick)
+        if (gameObject.GetComponent<SpriteRenderer>().sprite == GameManager.instance.GetSetImgToClick && !isPointTake)
         {
             ScoreManager.instance.AddScorePlayer();
             Debug.Log("Found!");
+            ButtonsSpawnManager.instance.HideButtons();
+            GameObject.FindGameObjectWithTag("UIPlayer").GetComponent<PlayerUI>().isGetGoodAnswer = true;
+            //FEEDBACK TO SAY GG, wait until next wave
         }
-        else
+        else if(!isPointTake)
         {
             ScoreManager.instance.DecreaseScorePlayer();
             Debug.Log("Wrong one!");
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            gameObject.GetComponent<GivingAnswer>().isPointTake = true;
+            GameObject.FindGameObjectWithTag("UIPlayer").GetComponent<PlayerUI>().delay = 0;
+            //NEED FEEDBACK OTHER THAN SCORE DECREASE
         }
     }
 }

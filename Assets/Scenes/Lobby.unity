@@ -286,7 +286,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1109479102
 RectTransform:
   m_ObjectHideFlags: 0
@@ -494,7 +494,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1242529044
 RectTransform:
   m_ObjectHideFlags: 0
@@ -667,6 +667,10 @@ PrefabInstance:
     - target: {fileID: 3754784073734727794, guid: 7c53c5247b1930044b4a087bc693289c, type: 3}
       propertyPath: m_Name
       value: NetWorkManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3754784073734727795, guid: 7c53c5247b1930044b4a087bc693289c, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c53c5247b1930044b4a087bc693289c, type: 3}

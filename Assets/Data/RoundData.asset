@@ -13,10 +13,24 @@ MonoBehaviour:
   m_Name: RoundData
   m_EditorClassIdentifier: 
   spritesToFind:
-  - {fileID: 21300000, guid: 1866def280fbb604f9f34142bc46af20, type: 3}
-  - {fileID: 21300000, guid: fa821b6b08cc5ef4ca16f3382e3e3cbe, type: 3}
-  - {fileID: 21300000, guid: e06850ae44791c745b29c36aa245c475, type: 3}
-  - {fileID: 21300000, guid: 7bf3a9a04d26a074cbe7a0156b2a75ed, type: 3}
-  - {fileID: 21300000, guid: 27498d43a5ec4f044b6d99d8998ebfca, type: 3}
   - {fileID: 21300000, guid: 0f80745c5c0157c4ab095bb9f2623755, type: 3}
-  buttonsNumber: 0a0000000b0000000c0000000d0000000e0000000f000000
+  - {fileID: 21300000, guid: 97a509525d3e8dd46bad9b9b754e273a, type: 3}
+  - {fileID: 21300000, guid: 1866def280fbb604f9f34142bc46af20, type: 3}
+  - {fileID: 21300000, guid: 81a870bc1400a964ba2ce1f47bc61d5a, type: 3}
+  - {fileID: 21300000, guid: faf3968572cf4e24eaf2ebc3018331b5, type: 3}
+  - {fileID: 21300000, guid: 83b2d6b2b565a784891f1c13e1bb268f, type: 3}
+  - {fileID: 21300000, guid: fa821b6b08cc5ef4ca16f3382e3e3cbe, type: 3}
+  - {fileID: 21300000, guid: a2481c6c1be4962458c511187f89599b, type: 3}
+  - {fileID: 21300000, guid: 9ed99393f41d8f94d9423201ec21beba, type: 3}
+  - {fileID: 21300000, guid: c8723ee50638e6247ad7dcda08045156, type: 3}
+  - {fileID: 21300000, guid: e06850ae44791c745b29c36aa245c475, type: 3}
+  - {fileID: 21300000, guid: 2700af7f787a8fe479205f6cc1717bf8, type: 3}
+  - {fileID: 21300000, guid: 1e944d7935361884486e9f88e2ff3740, type: 3}
+  - {fileID: 21300000, guid: f61739fd5be26254b8ead9cd69dd358a, type: 3}
+  - {fileID: 21300000, guid: 7bf3a9a04d26a074cbe7a0156b2a75ed, type: 3}
+  - {fileID: 21300000, guid: 97fd880b02807b048ac1d2c7d5fb4e15, type: 3}
+  - {fileID: 21300000, guid: a62fb2e20ef29fa438cfd96a58ab0f94, type: 3}
+  - {fileID: 21300000, guid: 27498d43a5ec4f044b6d99d8998ebfca, type: 3}
+  - {fileID: 21300000, guid: 383da675908ebe94888a784a6eefec41, type: 3}
+  - {fileID: 21300000, guid: 0f80745c5c0157c4ab095bb9f2623755, type: 3}
+  buttonsNumber: 0f000000140000001e0000001f00000023000000240000002500000028000000290000002a0000002d0000002e0000002f00000032000000330000003400000035000000370000003800000001000000

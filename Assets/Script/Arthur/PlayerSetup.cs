@@ -52,7 +52,7 @@ public class PlayerSetup : NetworkBehaviour
         RegisterPlayerAndSetUsername();
     }
 
-    /*
+
     // Utilisé dans le cas où le build est uniquement un serveur
     public override void OnStartServer()
     {
@@ -60,7 +60,7 @@ public class PlayerSetup : NetworkBehaviour
 
         RegisterPlayerAndSetUsername();
     }
-    */
+
 
     private void RegisterPlayerAndSetUsername()
     {
