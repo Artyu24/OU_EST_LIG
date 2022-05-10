@@ -136,7 +136,8 @@ public class GameManager : NetworkBehaviour
         imgToFindUI.transform.localScale = new Vector3(3, 3, 3);
         isChanging = true;
         ResetRound();
-        GameObject.FindGameObjectWithTag("UIPlayer").GetComponent<PlayerUI>().isGetGoodAnswer = false;
+        if(GameObject.FindGameObjectWithTag("UIPlayer") != null)
+            GameObject.FindGameObjectWithTag("UIPlayer").GetComponent<PlayerUI>().isGetGoodAnswer = false;
         yield return new WaitForSeconds(timeBetweenRound);
         imgToFindUI.transform.position = previousPosition;
         imgToFindUI.transform.localScale = new Vector3(1, 1, 1);

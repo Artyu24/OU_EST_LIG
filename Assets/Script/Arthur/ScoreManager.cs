@@ -40,7 +40,7 @@ public class ScoreManager : NetworkBehaviour
     public void AddScorePlayer()
     {
         GameObject localPlayer = NetworkClient.localPlayer.gameObject;
-
+        GameObject.FindGameObjectWithTag("UIPlayer").GetComponent<PlayerUI>().pointAdd = actualScore;
         CmdUpdateScore(GameManager.GetPlayer(localPlayer.name));
     }
 

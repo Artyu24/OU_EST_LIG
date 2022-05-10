@@ -54,12 +54,12 @@ public class PlayerSetup : NetworkBehaviour
 
 
     // Utilisé dans le cas où le build est uniquement un serveur
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
+    //public override void OnStartServer()
+    //{
+    //    base.OnStartServer();
 
-        RegisterPlayerAndSetUsername();
-    }
+    //    RegisterPlayerAndSetUsername();
+    //}
 
 
     private void RegisterPlayerAndSetUsername()

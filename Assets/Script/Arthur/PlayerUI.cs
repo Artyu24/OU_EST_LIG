@@ -12,9 +12,10 @@ public class PlayerUI : MonoBehaviour
 
     [SerializeField] private GameObject scoreBoard;
     [SerializeField] private GameObject wrongOneBox, goodOneBox;
-    [SerializeField] private Text timerText;
+    [SerializeField] private Text timerText, pointText;
 
     public bool isGetGoodAnswer;
+    public int pointAdd;
 
     public float delay = 3;
 
@@ -42,6 +43,7 @@ public class PlayerUI : MonoBehaviour
             wrongOneBox.SetActive(false);
         }
 
+        pointText.text = "+ " + pointAdd.ToString();
         timerText.text = ((int)GameManager.instance.timeInGame).ToString();
 
         UpdateScore(dataPlayer.GetActualScore);
