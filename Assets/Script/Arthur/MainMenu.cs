@@ -5,9 +5,7 @@ using Mirror;
 
 public class MainMenu : MonoBehaviour
 {
-
     private NetworkManager networkManager;
-
 
     void Start()
     {
@@ -25,6 +23,11 @@ public class MainMenu : MonoBehaviour
     public void HostGame()
     {
         networkManager.StartHost();
+    }
+
+    public void SetIP(string ip)
+    {
+        networkManager.networkAddress = ip;
     }
 
     public void JoinGame()

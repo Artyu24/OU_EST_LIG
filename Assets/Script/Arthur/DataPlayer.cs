@@ -10,8 +10,12 @@ public class DataPlayer : NetworkBehaviour
 
     [SyncVar]
     private int actualScore;
-
     public int GetActualScore {get {return actualScore;} }
+
+    [SyncVar]
+    private int classement = 0;
+    public int Classement { get => classement; set => classement = value; }
+
 
     private void Awake()
     {
