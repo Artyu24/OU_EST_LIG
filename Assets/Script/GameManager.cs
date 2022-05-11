@@ -72,7 +72,7 @@ public class GameManager : NetworkBehaviour
         {
             foreach (DataPlayer player in GetAllPlayers())
             {
-                if (player.username == "Admin")
+                if (player.username == "ArthurLIG2402")
                 {
                     isAdminHere = true;
                     if(StartGame() != null)

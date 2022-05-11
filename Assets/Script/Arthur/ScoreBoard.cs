@@ -33,6 +33,7 @@ public class ScoreBoard : MonoBehaviour
             }
             GameObject itemGO = Instantiate(playerScoreboardItem, playerScoreboardList);
             listPlayerPrint.Add(playerChoose);
+            playerChoose.Classement = listPlayerPrint.Count;
             PlayerScoreboardItem item = itemGO.GetComponent<PlayerScoreboardItem>();
             if (item != null)
             {
